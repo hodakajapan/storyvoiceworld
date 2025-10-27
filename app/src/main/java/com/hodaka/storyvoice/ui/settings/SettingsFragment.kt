@@ -1,5 +1,7 @@
 package com.hodaka.storyvoice.ui.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.hodaka.storyvoice.R
 import com.hodaka.storyvoice.data.Prefs
 import com.hodaka.storyvoice.databinding.FragmentSettingsBinding
 import com.hodaka.storyvoice.tts.TtsController
+import com.hodaka.storyvoice.common.ParentalGate
 import java.util.Locale
 
 class SettingsFragment : Fragment() {
@@ -116,7 +119,7 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        // --- ★ 言語スピナー（Prefs と双方向） ---
+        // --- 言語スピナー（Prefs と双方向） ---
         val entries = resources.getStringArray(R.array.app_lang_entries)
         val values = resources.getStringArray(R.array.app_lang_values)
 
@@ -158,17 +161,27 @@ class SettingsFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // プライバシー（ペアレンタルゲート）
+        // --- プライバシーポリシー（ペアレンタルゲート経由で外部ブラウザ）
         binding.btnPrivacy.setOnClickListener {
-            com.hodaka.storyvoice.common.ParentalGate.show(requireContext()) {
-                val url = getString(R.string.privacy_url)
-                val intent = android.content.Intent(
-                    android.content.Intent.ACTION_VIEW,
-                    android.net.Uri.parse(url)
-                )
-                startActivity(intent)
+            val url = getString(R.string.policy_privacy_url)
+            ParentalGate.show(requireContext()) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
         }
+
+        // もし将来、クレジット／セーフティのボタンを追加する場合は下記のように：
+        // binding.btnCredits.setOnClickListener {
+        //     val url = getString(R.string.policy_credits_url)
+        //     ParentalGate.show(requireContext()) {
+        //         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        //     }
+        // }
+        // binding.btnSafety.setOnClickListener {
+        //     val url = getString(R.string.policy_safety_url)
+        //     ParentalGate.show(requireContext()) {
+        //         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        //     }
+        // }
     }
 
     private fun updateValueText() {

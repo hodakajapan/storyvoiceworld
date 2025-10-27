@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">StoryVoice World</string>
+
+    <!-- Navigation -->
     <string name="nav_home">Home</string>
     <string name="nav_story">Story</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_collection">Collection</string>
+
+    <!-- Main UI -->
     <string name="today_pick">今日の話</string>
     <string name="reading_calendar">読書カレンダー</string>
 
-    <!-- AdMob -->
+    <!-- AdMob (Test IDs during development) -->
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_home">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_inter_story">ca-app-pub-3940256099942544/1033173712</string>
@@ -23,13 +27,16 @@
     <!-- バナー -->
     <string name="ad_banner_content_desc">広告バナー</string>
 
-    <!-- リモート配信ベースURL & プライバシー -->
-    <string name="stories_base_url">https://your-gh-pages.example.com/storyvoice</string>
-    <string name="privacy_url">https://your-gh-pages.example.com/storyvoice/privacy.html</string>
+    <!-- Remote base URL (for stories / assets) -->
+    <string name="stories_base_url">https://hodakajapan.github.io/storyvoiceworld</string>
 
+    <!-- Policy & Legal Pages (GitHub Pages links) -->
+    <string name="policy_base_url">https://hodakajapan.github.io/storyvoiceworld</string>
+    <string name="policy_privacy_url">https://hodakajapan.github.io/storyvoiceworld/privacy.html</string>
+    <string name="policy_credits_url">https://hodakajapan.github.io/storyvoiceworld/credits.html</string>
+    <string name="policy_safety_url">https://hodakajapan.github.io/storyvoiceworld/safety.html</string>
+
+    <!-- UI Labels -->
     <string name="open_privacy">プライバシーポリシーを開く</string>
-
     <string name="app_lang_title">アプリ言語（物語）</string>
-
-
 </resources>
