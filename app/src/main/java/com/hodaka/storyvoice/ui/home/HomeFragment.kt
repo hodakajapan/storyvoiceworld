@@ -40,6 +40,13 @@ class HomeFragment : Fragment() {
         // 初回ロード（現在のアプリ言語で“今日の話”を決定）
         loadTodayPickAndUpdateHeader()
 
+        val done = Prefs.isMissionDoneToday(requireContext())
+        binding.tvMission.text = if (done) "今日のミッション：達成済み ✓" else "今日のミッション：“今日の話”を読もう"
+        binding.btnMissionAction.setOnClickListener {
+            // 未達なら “今日の話” へ DeepLink、達成なら図鑑/コレクションへ誘導でもOK
+            // ここは既存の DeepLink ロジックを再利用
+        }
+
         binding.btnReadToday.setOnClickListener {
             val appLang = Prefs.getAppLang(requireContext())
             findNavController().navigate(

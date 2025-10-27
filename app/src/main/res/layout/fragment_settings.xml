@@ -21,6 +21,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchNightDefault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ナイトモード（Storyで減光・暖色）"
+            android:layout_marginTop="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNight10m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ナイト：10分"
+            android:layout_marginTop="8dp"/>
+
         <!-- 通知スイッチ（Material） -->
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchNotif"
