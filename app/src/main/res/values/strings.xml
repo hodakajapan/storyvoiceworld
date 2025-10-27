@@ -39,4 +39,7 @@
     <!-- UI Labels -->
     <string name="open_privacy">プライバシーポリシーを開く</string>
     <string name="app_lang_title">アプリ言語（物語）</string>
+
+    <string name="open_credits">クレジット</string>
+    <string name="open_safety">安全ガイド</string>
 </resources>
