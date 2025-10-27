@@ -1,17 +1,16 @@
-// app/src/main/java/com/hodaka/storyvoice/ui/story/StoryFragment.kt
 package com.hodaka.storyvoice.ui.story
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import coil.load
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -25,6 +24,8 @@ import com.hodaka.storyvoice.data.StoryItem
 import com.hodaka.storyvoice.databinding.FragmentStoryBinding
 import com.hodaka.storyvoice.tts.TtsController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -50,6 +51,10 @@ class StoryFragment : Fragment() {
     // stories.json モデル
     private lateinit var storiesModel: Stories
     private var storyItem: StoryItem? = null
+
+    // --- Night mode ---
+    private var nightMode: Boolean = false
+    private var sleepJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +101,6 @@ class StoryFragment : Fragment() {
                         .use { it.readBytes().toString(Charsets.UTF_8) }
                 }
                 allLines = text.split('\n').map { it.trim() }.filter { it.isNotEmpty() }
-                renderLines(allLines); baseIndex = 0; highlight(-1)
             } else {
                 val item = storyItem!!
                 val title = item.titles[lang] ?: item.titles["ja"] ?: storyId
@@ -108,8 +112,13 @@ class StoryFragment : Fragment() {
                     RemoteRepository.loadStoryText(requireContext(), item, lang)
                 }
                 allLines = text.split('\n').map { it.trim() }.filter { it.isNotEmpty() }
-                renderLines(allLines); baseIndex = 0; highlight(-1)
             }
+
+            // 表示＆復元（最後に読んだ位置）
+            renderLines(allLines)
+            baseIndex = Prefs.loadLastIndex(requireContext(), storyId, lang)
+                .coerceIn(0, (allLines.size - 1).coerceAtLeast(0))
+            highlight(if (allLines.isEmpty()) -1 else baseIndex)
 
             // TTS 初期化
             tts = TtsController(requireContext()).also {
@@ -119,14 +128,24 @@ class StoryFragment : Fragment() {
                     override fun onSentenceStart(index: Int) {
                         val actual = baseIndex + index
                         highlight(actual)
+                        // 進捗保存（途中から再開できるように）
+                        Prefs.saveLastIndex(requireContext(), storyId, lang, actual)
                     }
                     override fun onSentenceDone(index: Int) { /* no-op */ }
                     override fun onAllDone() {
                         isPlaying = false
                         binding.btnPlay.text = "Play"
                         Toast.makeText(requireContext(), "終わりです", Toast.LENGTH_SHORT).show()
+
+                        // 既読・進捗
                         Prefs.markReadToday(requireContext())
                         Prefs.markStoryDoneToday(requireContext(), storyId)
+                        // ミッション達成（デイリー）
+                        Prefs.setMissionDoneToday(requireContext())
+                        // 図鑑アンロック
+                        Prefs.addUnlocked(requireContext(), storyId)
+                        // 読了後は進捗を最終行に固定
+                        Prefs.saveLastIndex(requireContext(), storyId, lang, (allLines.size - 1).coerceAtLeast(0))
 
                         // 話末インタースティシャル（AdGateで頻度制御）
                         if (AdGate.canShow(requireContext())) {
@@ -163,6 +182,11 @@ class StoryFragment : Fragment() {
                 else -> Locale.ENGLISH
             }
             tts.init(locale) { /* ready */ }
+
+            // --- Night default: 起動時に反映 ---
+            if (Prefs.isNightDefault(requireContext())) {
+                toggleNightMode(true)
+            }
         }
 
         binding.btnPlay.setOnClickListener {
@@ -171,8 +195,14 @@ class StoryFragment : Fragment() {
                 tts.pause()
                 isPlaying = false
                 binding.btnPlay.text = "Play"
+                // 再生を止めたタイミングで寝かしつけも解除（好みで）
+                cancelSleepTimer()
             } else {
                 startFromBaseIndex()
+                // 既定ナイトONなら、再生開始と同時に10分スリープ
+                if (Prefs.isNightDefault(requireContext())) {
+                    startSleepTimer(10)
+                }
             }
         }
 
@@ -181,6 +211,7 @@ class StoryFragment : Fragment() {
             if (baseIndex > 0) {
                 baseIndex--
                 if (isPlaying) startFromBaseIndex() else highlight(baseIndex)
+                Prefs.saveLastIndex(requireContext(), storyId, lang, baseIndex)
             }
         }
 
@@ -189,8 +220,42 @@ class StoryFragment : Fragment() {
             if (baseIndex < allLines.lastIndex) {
                 baseIndex++
                 if (isPlaying) startFromBaseIndex() else highlight(baseIndex)
+                Prefs.saveLastIndex(requireContext(), storyId, lang, baseIndex)
             }
         }
+    }
+
+    // --- Night control ---
+
+    private fun toggleNightMode(on: Boolean) {
+        nightMode = on
+        // 暖色オーバーレイ
+        binding.nightOverlay.visibility = if (on) View.VISIBLE else View.GONE
+        // 画面減光
+        try {
+            val lp = requireActivity().window.attributes
+            lp.screenBrightness = if (on) 0.1f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+            requireActivity().window.attributes = lp
+        } catch (_: Exception) {
+            // Activityがnullなどの例外は握り潰す（安全側）
+        }
+    }
+
+    private fun startSleepTimer(minutes: Int) {
+        cancelSleepTimer()
+        sleepJob = viewLifecycleOwner.lifecycleScope.launch {
+            val ms = (minutes * 60_000L).coerceAtLeast(1_000L)
+            delay(ms)
+            // タイマー満了：TTS停止＆ナイト解除
+            if (::tts.isInitialized) tts.pause() // or stop()
+            toggleNightMode(false)
+            Toast.makeText(requireContext(), "スリープタイマーで停止しました", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun cancelSleepTimer() {
+        sleepJob?.cancel()
+        sleepJob = null
     }
 
     private fun startFromBaseIndex() {
@@ -273,6 +338,9 @@ class StoryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // 後始末：タイマーと減光を確実に解除
+        cancelSleepTimer()
+        if (nightMode) toggleNightMode(false)
         if (::tts.isInitialized) tts.release()
         _binding = null
     }
