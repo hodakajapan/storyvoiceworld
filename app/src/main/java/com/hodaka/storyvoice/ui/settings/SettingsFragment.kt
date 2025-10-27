@@ -168,20 +168,21 @@ class SettingsFragment : Fragment() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
         }
+// --- クレジット ---
+        binding.btnCredits.setOnClickListener {
+            val url = getString(R.string.policy_credits_url)
+            com.hodaka.storyvoice.common.ParentalGate.show(requireContext()) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+        }
 
-        // もし将来、クレジット／セーフティのボタンを追加する場合は下記のように：
-        // binding.btnCredits.setOnClickListener {
-        //     val url = getString(R.string.policy_credits_url)
-        //     ParentalGate.show(requireContext()) {
-        //         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-        //     }
-        // }
-        // binding.btnSafety.setOnClickListener {
-        //     val url = getString(R.string.policy_safety_url)
-        //     ParentalGate.show(requireContext()) {
-        //         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-        //     }
-        // }
+// --- 安全ガイド ---
+        binding.btnSafety.setOnClickListener {
+            val url = getString(R.string.policy_safety_url)
+            com.hodaka.storyvoice.common.ParentalGate.show(requireContext()) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+        }
     }
 
     private fun updateValueText() {
