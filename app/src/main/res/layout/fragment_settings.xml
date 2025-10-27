@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ScrollView 直下は 1 子要素のみ -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- タイトル -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:text="Settings"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- 通知スイッチ（Material） -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchNotif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="“今日の話” 通知（毎日20:00）"
+            app:useMaterialThemeColors="true" />
+
+        <!-- 速度 -->
+        <TextView
+            android:id="@+id/tvRate"
+            android:text="Speed (0.5–1.5):"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <SeekBar
+            android:id="@+id/seekRate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100" />
+
+        <!-- ピッチ -->
+        <TextView
+            android:id="@+id/tvPitch"
+            android:text="Pitch (0.8–1.2):"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <SeekBar
+            android:id="@+id/seekPitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100" />
+
+        <!-- プレビュー -->
+        <Button
+            android:id="@+id/btnPreview"
+            android:text="プレビュー（こんにちは）"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvValues"
+            android:text="rate=, pitch="
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- 言語選択（アプリ言語） -->
+        <TextView
+            android:id="@+id/tvLangLabel"
+            android:text="アプリ言語（朗読と“今日の話”に反映）"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/spinnerLang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <!-- ※ entries は Kotlin 側で ArrayAdapter を設定する想定。
+             arrays.xml の重複エラー回避のためここでは指定しません。 -->
+
+        <!-- プライバシーポリシー -->
+        <Button
+            android:id="@+id/btnPrivacy"
+            android:text="@string/open_privacy"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- リセットボタン -->
+        <Button
+            android:id="@+id/btnReset"
+            android:text="デフォルトに戻す"
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.hodaka.storyvoice.ui.home.HomeFragment"
+        android:label="Home">
+
+        <action
+            android:id="@+id/action_home_to_story"
+            app:destination="@id/storyFragment" />
+
+        <action
+            android:id="@+id/action_home_to_settings"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/storyFragment"
+        android:name="com.hodaka.storyvoice.ui.story.StoryFragment"
+        android:label="Story">
+
+        <!-- ★ DeepLink/通常遷移どちらでも使う引数を“string”で明示。フォールバックはFragment側で実施 -->
+        <argument
+            android:name="storyId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="lang"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.hodaka.storyvoice.ui.settings.SettingsFragment"
+        android:label="Settings" />
+
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="com.hodaka.storyvoice.ui.collection.CollectionFragment"
+        android:label="Collection" />
+</navigation>

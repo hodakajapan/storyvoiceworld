@@ -1,0 +1,13 @@
+<resources>
+    <string-array name="app_lang_entries">
+        <item>日本語 (ja)</item>
+        <item>Khmer (km)</item>
+        <item>English (en)</item>
+    </string-array>
+
+    <string-array name="app_lang_values">
+        <item>ja</item>
+        <item>km</item>
+        <item>en</item>
+    </string-array>
+</resources>

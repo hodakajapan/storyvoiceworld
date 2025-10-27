@@ -1,0 +1,19 @@
+# Android/Gradle
+*.iml
+.gradle/
+local.properties
+/.idea/*
+!/.idea/codeStyles
+!/.idea/inspectionProfiles
+/build/
+*/build/
+captures/
+.externalNativeBuild/
+.cxx/
+# OS
+.DS_Store
+Thumbs.db
+# Logs/Keys
+*.log
+*.jks
+*.keystore

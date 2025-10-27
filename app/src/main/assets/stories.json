@@ -1,0 +1,73 @@
+// app/src/main/assets/stories.json
+{
+  "version": 1,
+  "lang": ["km", "en", "ja"],
+  "items": [
+    {
+      "id": "s001",
+      "cover": "covers/s001.webp",
+      "title": {
+        "km": "ភ្លេងយប់",
+        "en": "Night Music",
+        "ja": "よるのおんがく"
+      },
+      "text": {
+        "km": "text/s001_km.txt",
+        "en": "text/s001_en.txt",
+        "ja": "text/s001_ja.txt"
+      },
+      "remoteText": {
+        "km": "https://your-gh-pages.example.com/storyvoice/text/s001_km.txt",
+        "en": "https://your-gh-pages.example.com/storyvoice/text/s001_en.txt",
+        "ja": "https://your-gh-pages.example.com/storyvoice/text/s001_ja.txt"
+      },
+      "lengthSec": 390,
+      "rewardId": "r_basic",
+      "sponsorSlot": null
+    },
+    {
+      "id": "s002",
+      "cover": "covers/s002.webp",
+      "title": {
+        "km": "ផ្កាចងចាំ",
+        "en": "Memory Flowers",
+        "ja": "おぼえのはな"
+      },
+      "text": {
+        "km": "text/s002_km.txt",
+        "en": "text/s002_en.txt",
+        "ja": "text/s002_ja.txt"
+      },
+      "remoteText": {
+        "km": "https://your-gh-pages.example.com/storyvoice/text/s002_km.txt",
+        "en": "https://your-gh-pages.example.com/storyvoice/text/s002_en.txt",
+        "ja": "https://your-gh-pages.example.com/storyvoice/text/s002_ja.txt"
+      },
+      "lengthSec": 360,
+      "rewardId": "r_basic",
+      "sponsorSlot": null
+    },
+    {
+      "id": "s003",
+      "cover": "covers/s003.webp",
+      "title": {
+        "km": "បណ្ដោយភ្លៀង",
+        "en": "After the Rain",
+        "ja": "あめあがり"
+      },
+      "text": {
+        "km": "text/s003_km.txt",
+        "en": "text/s003_en.txt",
+        "ja": "text/s003_ja.txt"
+      },
+      "remoteText": {
+        "km": "https://your-gh-pages.example.com/storyvoice/text/s003_km.txt",
+        "en": "https://your-gh-pages.example.com/storyvoice/text/s003_en.txt",
+        "ja": "https://your-gh-pages.example.com/storyvoice/text/s003_ja.txt"
+      },
+      "lengthSec": 420,
+      "rewardId": "r_bonus",
+      "sponsorSlot": null
+    }
+  ]
+}
